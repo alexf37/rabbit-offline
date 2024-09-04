@@ -1,0 +1,20 @@
+{
+  "name": "rabbit-offline",
+  "module": "index.ts",
+  "type": "module",
+  "scripts": {
+    "dev": "bun --watch index.ts",
+    "build": "bun build index.ts --target bun --outdir ./dist",
+    "start": "NODE_ENV=production bun index.ts",
+    "download": "bun download.ts"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "elysia": "^1.1.11"
+  }
+}
