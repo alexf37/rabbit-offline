@@ -25,11 +25,7 @@ async fn download_file(url: &str, file_path: &str) -> Result<(), Box<dyn Error>>
     let mut file = tokio::fs::File::create(file_path).await?;
     let content = response.text().await?;
 
-    // replace /wiki/{name} urls with ./wiki/{name}.html
-    let re = Regex::new(r"/wiki/([a-zA-Z0-9%_-,\(\)]+)").unwrap();
-    let result = re.replace_all(&content, "./wiki/$1.html");
-
-    tokio::io::copy(&mut result.as_bytes().as_ref(), &mut file).await?;
+    tokio::io::copy(&mut content.as_bytes().as_ref(), &mut file).await?;
 
     println!("downloaded {} to {}", url, file_path);
 
@@ -72,9 +68,6 @@ async fn main() -> Result<(), Box<dyn Error>> {
 
     join_all(tasks).await;
 
-    let re = Regex::new(r"/wiki/([a-zA-Z0-9_,\(\)-]+)").unwrap();
-    let result = re.replace_all(&html, "./wiki/$1.html");
-
-    write_file("./index.html", &result).await?;
+    write_file("./index.html", &html).await?;
     return Ok(());
 }

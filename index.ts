@@ -1,5 +1,7 @@
 import { Elysia } from "elysia";
 
+const styles = await Bun.file("./styles.css").text();
+
 const app = new Elysia();
 
 app.get("/*", async (req) => {
@@ -9,7 +11,7 @@ app.get("/*", async (req) => {
     filePath += "index";
   }
 
-  const file = Bun.file(`.${filePath}`);
+  const file = Bun.file(`.${filePath}.html`);
   req.set.headers["content-type"] = "text/html";
 
   // check if file exists and does not have .html extension
@@ -17,7 +19,10 @@ app.get("/*", async (req) => {
   console.log(fileExists);
 
   if (fileExists) {
-    return await file.text();
+    return (await file.text()).replace(
+      "<head>",
+      `<head><style>${styles}</style>`
+    );
   } else {
     return `File not found: ${file.name}`;
   }
